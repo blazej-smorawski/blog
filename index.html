@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A website</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/components/prism-csharp.min.js"></script> 
+
+    <link rel="stylesheet" href="https://unpkg.com/dracula-prism/dist/css/dracula-prism.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 40px auto;
+            max-width: 650px;
+            line-height: 1.6;
+            font-size: 18px;
+            color: #444;
+            background-color: #EEEEEE;
+            padding: 0 10px;
+        }
+
+        h1, h2 {
+            font-family: 'Merriweather', serif;
+            line-height: 1.2;
+        }
+    </style>
+</head>
+
+<body>
+    <nav id="sidebar">
+        <h2>A website</h2>
+        <a href="#/blogs/example">Example</a>
+        <hr/>
+    </nav>
+
+    <div id="content">
+        <main id="blog-content"></main>
+    </div>
+
+    <script>
+        async function loadBlog() {
+            const hash = window.location.hash.slice(2);
+            const filePath = hash + '.html';
+
+            try {
+                const response = await fetch(filePath);
+                if (!response.ok) {
+                    throw new Error('Blog post not found.');
+                }
+                const content = await response.text();
+                document.getElementById("blog-content").innerHTML = content;
+                Prism.highlightAllUnder(document.getElementById("blog-content"));
+            } catch (error) {
+                document.getElementById("blog-content").innerHTML = '<p>Blog post not found.</p>';
+            }
+        }
+
+        window.addEventListener('hashchange', loadBlog);
+
+        if (window.location.hash) {
+            loadBlog();
+        }
+    </script>
+</body>
+
+</html>
